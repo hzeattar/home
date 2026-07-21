@@ -10,3 +10,7 @@
 *.log
 .vercel
 .env*.local
+
+# local tooling (machine-specific)
+.claude
+.impeccable
