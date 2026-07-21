@@ -8,7 +8,7 @@ No installs. No CAD degree. No login. Just drag rooms and furniture onto a live 
 
 ![Casita demo](media/casita-demo.gif)
 
-[**▶ Live demo**](https://casita.rohitraj.tech) · [Report a bug](https://github.com/rohitguta2432/casita/issues) · [Add a piece](#-add-your-own-furniture-in-10-lines)
+[**▶ Watch the 15s demo**](media/casita-demo.mp4) · [Run it locally](#-run-it-in-30-seconds) · [Add a piece](#-add-your-own-furniture-in-10-lines) · [Report a bug](https://github.com/rohitguta2432/casita/issues)
 
 ![MIT License](https://img.shields.io/badge/license-MIT-ff7a59) ![Next.js](https://img.shields.io/badge/Next.js-15-black) ![React Three Fiber](https://img.shields.io/badge/react--three--fiber-9-6d8cc9) ![no%20backend](https://img.shields.io/badge/backend-none-4c9d63)
 
