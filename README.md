@@ -141,3 +141,11 @@ Built by [**Rohit Raj**](https://rohitraj.tech) · [more AI agents & experiments
 *If Casita made you smile, drop it a ⭐ — it genuinely helps.*
 
 </div>
+
+---
+
+### 🤝 Work with me
+
+I'm an **AI Consultant · Forward Deployed Engineer** — I embed with teams and ship AI to production: agents, MCP integrations, and LLM features, with evals proving they work.
+
+**→ [rohitraj.tech/en/hire](https://rohitraj.tech/en/hire)**
