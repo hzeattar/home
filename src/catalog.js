@@ -1,4 +1,5 @@
 import { CATALOG as BASE_CATALOG, GROUPS as BASE_GROUPS } from "./pieces";
+import REAL_PRODUCTS_DATA from "../data/real-products.json";
 
 // Physical dimensions are metres and follow the scene contract:
 // X = width, Y = height, Z = depth.
@@ -23,23 +24,31 @@ const BASE_DIMENSIONS = {
   painting: { width: 0.9, height: 1.8, depth: 0.06 },
 };
 
-/*
- * Add production furniture here after converting photographs to GLB.
- * The loader will automatically resize every model to these REAL dimensions.
- *
- * Example:
- * {
- *   type: "qubaisa-sofa-001",
- *   sku: "QB-SF-001",
- *   label: "Classic Sofa 001",
- *   emoji: "🛋️",
- *   group: "Qubaisa Furniture",
- *   modelUrl: "/models/qubaisa-sofa-001.glb",
- *   dimensions: { width: 2.4, height: 0.85, depth: 0.95 },
- *   footprint: [2.4, 0.95],
- * }
- */
-export const REAL_PRODUCTS = [];
+const positive = (value) => Number.isFinite(Number(value)) && Number(value) > 0;
+
+const hasVerifiedDimensions = (product) =>
+  product?.measurementStatus === "verified" &&
+  positive(product?.dimensions?.width) &&
+  positive(product?.dimensions?.height) &&
+  positive(product?.dimensions?.depth);
+
+const isPublishableRealProduct = (product) =>
+  product?.publish === true &&
+  typeof product?.modelUrl === "string" &&
+  product.modelUrl.endsWith(".glb") &&
+  hasVerifiedDimensions(product);
+
+// real-products.json is the only production manifest for generated furniture.
+// A product is intentionally kept out of the live catalog until BOTH its GLB
+// and manufacturer/showroom dimensions are verified. This prevents an AI
+// generated mesh from being presented as physically accurate by accident.
+export const PENDING_PRODUCTS = REAL_PRODUCTS_DATA.filter((product) => !isPublishableRealProduct(product));
+
+export const REAL_PRODUCTS = REAL_PRODUCTS_DATA.filter(isPublishableRealProduct).map((product) => ({
+  ...product,
+  footprint: [Number(product.dimensions.width), Number(product.dimensions.depth)],
+  assetStatus: "verified-real-glb",
+}));
 
 export const CATALOG = [
   ...BASE_CATALOG.map((item) => {
@@ -53,6 +62,8 @@ export const CATALOG = [
       dimensions,
       footprint: [dimensions.width, dimensions.depth],
       modelUrl: null,
+      assetStatus: "procedural-demo",
+      measurementStatus: "demo",
     };
   }),
   ...REAL_PRODUCTS,
