@@ -5,7 +5,8 @@
   "description": "Design your dream home in 3D, right in your browser. No installs, no CAD degree.",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "validate:assets": "node scripts/validate-furniture-assets.mjs",
+    "build": "npm run validate:assets && next build",
     "start": "next start",
     "lint": "next lint"
   },

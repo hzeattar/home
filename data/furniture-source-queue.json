@@ -1,0 +1,13 @@
+{
+  "sources": [
+    {
+      "id": "kubaisa-facebook-61558987945090",
+      "business": "Kubaisa Furniture | قبيصة للأثاث",
+      "sourcePageUrl": "https://www.facebook.com/profile.php?id=61558987945090",
+      "sourceType": "facebook-public-page",
+      "retrievalStatus": "blocked-in-current-automation-environment",
+      "notes": "Do not substitute unrelated furniture images. Only ingest photos that can be verified as belonging to this business/page or are supplied by the owner.",
+      "assets": []
+    }
+  ]
+}
