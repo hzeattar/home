@@ -1,55 +1,74 @@
 # Qubaisa 3D furniture assets
 
-Place production furniture models in this folder as `.glb` files.
+Production furniture models live here as optimized `.glb` files.
 
 ## Scale contract
 
 The application uses a strict real-world scale:
 
 - `1 Three.js unit = 1 metre`
-- Catalog dimensions are stored in metres.
-- The GLB file itself may have any export scale.
-- `ProductPiece.jsx` measures the model bounding box and automatically normalizes X/Y/Z to the exact catalog width/height/depth.
+- Product dimensions are stored in metres.
+- The GLB may arrive from an AI/photogrammetry tool at any arbitrary export scale.
+- `ProductPiece.jsx` measures the imported bounding box and automatically normalizes X/Y/Z to the verified width/height/depth.
 
-Example product entry in `src/catalog.js`:
+## Production manifest
 
-```js
+Real products are registered in `data/real-products.json`. Do not edit the procedural demo catalog to add sellable products.
+
+Example:
+
+```json
 {
-  type: "qubaisa-sofa-001",
-  sku: "QB-SF-001",
-  label: "Classic Sofa 001",
-  emoji: "🛋️",
-  group: "Qubaisa Furniture",
-  modelUrl: "/models/qubaisa-sofa-001.glb",
-  dimensions: {
-    width: 2.40,
-    height: 0.85,
-    depth: 0.95,
+  "type": "qubaisa-sofa-001",
+  "sku": "QB-SF-001",
+  "label": "Classic Sofa 001",
+  "emoji": "🛋️",
+  "group": "Qubaisa Furniture",
+  "modelUrl": "/models/qubaisa-sofa-001.glb",
+  "dimensions": {
+    "width": 2.4,
+    "height": 0.85,
+    "depth": 0.95
   },
-  footprint: [2.40, 0.95],
+  "measurementStatus": "verified",
+  "sourcePageUrl": "https://www.facebook.com/profile.php?id=61558987945090",
+  "sourceImageUrls": [
+    "https://example.com/source-photo-1.jpg"
+  ],
+  "generationMethod": "photogrammetry-or-image-to-3d",
+  "publish": true
 }
 ```
 
-## Recommended photo-to-3D workflow
+`npm run validate:assets` blocks publication when a `publish: true` item is missing its GLB or verified physical measurements. `npm run build` runs that validation automatically.
 
-1. Photograph the real furniture from many angles when possible.
-2. Convert the photos to a textured 3D model with KIRI Engine, Tripo, Meshy, Blender, or another photogrammetry/image-to-3D workflow.
-3. Export as GLB/glTF.
-4. Optimize polygon count and texture sizes before web delivery.
-5. Put the final `.glb` in `public/models/`.
-6. Add the product to `REAL_PRODUCTS` in `src/catalog.js`.
-7. Enter the manufacturer/showroom measurements, not AI-estimated dimensions.
-8. Verify the piece inside a known-size room before production release.
+## Photo -> 3D workflow
+
+1. Collect only photos that are verified as belonging to the Qubaisa/Kubaisa product or supplied by the owner.
+2. Prefer multiple angles: front, left/right, back and 30-45 degree views. A single image can be used for an AI approximation, but unseen geometry is inferred.
+3. Generate a textured mesh with a photo-to-3D/photogrammetry system.
+4. Export GLB/glTF.
+5. Clean obvious geometry errors and remove unwanted background/floor geometry.
+6. Optimize polygon count and textures for web/mobile.
+7. Put the final file in `public/models/`.
+8. Add the product to `data/real-products.json` with its source images and verified showroom/manufacturer dimensions.
+9. Set `measurementStatus` to `verified` only after checking the real product measurements.
+10. Set `publish` to `true` only after visual QA in a known-size room.
+11. Run `npm run validate:assets` and then `npm run build`.
+
+## Source queue
+
+`data/furniture-source-queue.json` records source pages and candidate assets before they become products. Candidate images must not be silently replaced with visually similar furniture from another business.
 
 ## Web optimization target
 
-For a smooth mobile experience, prefer:
+For smooth mobile performance, prefer:
 
 - GLB/GLTF
 - Draco or Meshopt geometry compression when available
 - KTX2/WebP/AVIF textures where practical
 - 1K-2K textures for most furniture
-- Low-to-medium polygon counts while preserving silhouette/detail
-- One optimized model per sellable furniture configuration
+- low-to-medium polygon counts while preserving silhouette/detail
+- one optimized model per sellable furniture configuration
 
-Never infer final physical measurements from a single photograph. The catalog measurements are the source of truth.
+Never infer final physical measurements from a photograph. The verified product measurements are the source of truth.
