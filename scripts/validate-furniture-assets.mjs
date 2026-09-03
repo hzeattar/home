@@ -36,17 +36,19 @@ for (const product of products) {
     seenSkus.add(product.sku);
   }
 
-  for (const key of ["width", "height", "depth"]) {
-    if (!positive(product?.dimensions?.[key])) fail(product, `dimensions.${key} must be a positive number in metres`);
-  }
-
   if (!Array.isArray(product.sourceImageUrls) || product.sourceImageUrls.length === 0) {
     warn(product, "no sourceImageUrls recorded");
   }
 
   if (!product.sourcePageUrl) warn(product, "no sourcePageUrl recorded");
 
+  const dimensionsValid = ["width", "height", "depth"].every((key) => positive(product?.dimensions?.[key]));
+
   if (product.publish === true) {
+    if (!dimensionsValid) {
+      fail(product, "publish=true requires positive width/height/depth dimensions in metres");
+    }
+
     if (product.measurementStatus !== "verified") {
       fail(product, "publish=true requires measurementStatus=verified");
     }
@@ -55,9 +57,12 @@ for (const product of products) {
       fail(product, "publish=true requires a .glb modelUrl");
     } else {
       const relative = product.modelUrl.replace(/^\//, "");
-      const fullPath = path.join(root, "public", relative.replace(/^models\//, "models/"));
+      const fullPath = path.join(root, "public", relative);
       if (!fs.existsSync(fullPath)) fail(product, `GLB file is missing: public/${relative}`);
     }
+  } else {
+    if (!dimensionsValid) warn(product, "pending product has incomplete dimensions");
+    if (!product.modelUrl) warn(product, "pending product has no GLB yet");
   }
 }
 
