@@ -7,8 +7,8 @@ const Studio = dynamic(() => import("../src/Studio"), {
   ssr: false,
   loading: () => (
     <div className="boot">
-      <div className="boot-logo">casita</div>
-      <div className="boot-sub">warming up the studio…</div>
+      <div className="boot-logo">Qubaisa 3D</div>
+      <div className="boot-sub">preparing your real-scale home studio…</div>
     </div>
   ),
 });
