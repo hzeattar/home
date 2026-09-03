@@ -1,14 +1,13 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "Casita — design your home in 3D",
+  title: "Qubaisa 3D — design your home with real dimensions",
   description:
-    "Casita is a free, open-source browser studio for designing your dream home in 3D. Drag rooms and furniture onto a live blueprint — no installs, no CAD degree.",
-  metadataBase: new URL("https://casita.rohitraj.tech"),
+    "A browser-based 3D home designer for planning rooms and placing furniture at real-world dimensions before purchase.",
   openGraph: {
-    title: "Casita — design your home in 3D",
+    title: "Qubaisa 3D — real-scale home designer",
     description:
-      "Drag rooms and furniture onto a live 3D blueprint. Free, open-source, runs in your browser.",
+      "Design a room using real measurements and preview furniture at its exact physical dimensions in 3D.",
     type: "website",
   },
 };
