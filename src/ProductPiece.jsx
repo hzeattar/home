@@ -44,15 +44,16 @@ function ExactSizeGLB({ url, dimensions, ghost }) {
       node.receiveShadow = true;
 
       if (ghost && node.material) {
-        const materials = Array.isArray(node.material) ? node.material : [node.material];
-        node.material = materials.map((material) => {
+        const wasArray = Array.isArray(node.material);
+        const materials = wasArray ? node.material : [node.material];
+        const clonedMaterials = materials.map((material) => {
           const copy = material.clone();
           copy.transparent = true;
           copy.opacity = 0.42;
           copy.depthWrite = false;
           return copy;
         });
-        if (!Array.isArray(node.material) && materials.length === 1) node.material = node.material[0];
+        node.material = wasArray ? clonedMaterials : clonedMaterials[0];
       }
     });
 
