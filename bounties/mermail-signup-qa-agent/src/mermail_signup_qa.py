@@ -24,6 +24,8 @@ SENSITIVE_TERMS = (
     "wire transfer",
 )
 MAX_FUTURE_SKEW_SECONDS = 120
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+FIXTURE_ROOT = (PROJECT_ROOT / "examples").resolve()
 
 
 @dataclass(frozen=True)
@@ -67,6 +69,39 @@ def _redact(text: str) -> str:
     text = OTP_RE.sub(lambda m: m.group(0).replace(m.group(1), "[REDACTED_CODE]"), text)
     text = URL_RE.sub("[REDACTED_LINK]", text)
     return text
+
+
+def _resolve_fixture_path(value: str, fixture_root: Path | None = None) -> Path:
+    """Resolve a CLI fixture only inside the approved examples directory.
+
+    The CLI is intentionally limited to synthetic/demo fixtures. Live Mermail data is
+    passed to ``analyze_message`` in memory, so an agent never needs arbitrary filesystem
+    access in order to perform the QA workflow.
+    """
+    approved_root = (fixture_root or FIXTURE_ROOT).resolve()
+    raw = Path(value)
+    if raw.is_absolute():
+        raise ValueError("fixture path must be relative to the project examples directory")
+
+    # Keep the documented CLI spelling (examples/foo.json) while still resolving against
+    # a single fixed trust root. Bare filenames are also accepted for convenience.
+    parts = raw.parts
+    if parts and parts[0] == "examples":
+        raw = Path(*parts[1:])
+    if not raw.parts:
+        raise ValueError("fixture path is required")
+
+    candidate = (approved_root / raw).resolve()
+    try:
+        candidate.relative_to(approved_root)
+    except ValueError as exc:
+        raise ValueError("fixture path escapes the approved examples directory") from exc
+
+    if candidate.suffix.lower() != ".json":
+        raise ValueError("fixture must be a .json file")
+    if not candidate.is_file():
+        raise ValueError("fixture file does not exist")
+    return candidate
 
 
 def analyze_message(message: dict, policy: Policy, now: datetime | None = None) -> dict:
@@ -175,11 +210,16 @@ def policy_from_payload(payload: dict) -> Policy:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Analyze a synthetic/authorized verification email and emit redacted QA evidence.")
-    parser.add_argument("fixture", type=Path)
+    parser.add_argument("fixture", help="JSON fixture under the project examples/ directory")
     parser.add_argument("--now", help="UTC/offset ISO-8601 timestamp used for deterministic demos")
     args = parser.parse_args()
 
-    payload = json.loads(args.fixture.read_text(encoding="utf-8"))
+    try:
+        fixture_path = _resolve_fixture_path(args.fixture)
+        payload = json.loads(fixture_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError) as exc:
+        parser.error(str(exc))
+
     now = datetime.fromisoformat(args.now.replace("Z", "+00:00")) if args.now else None
     result = analyze_message(payload["message"], policy_from_payload(payload), now)
     print(json.dumps(result, indent=2, ensure_ascii=False))
