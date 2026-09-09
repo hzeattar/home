@@ -1,0 +1,14 @@
+{
+  "policy": {
+    "sender_domains": ["example.test"],
+    "link_domains": ["example.test"],
+    "max_age_seconds": 900
+  },
+  "message": {
+    "run_id": "demo-001",
+    "from": "QA Bot <qa@example.test>",
+    "subject": "Verify your signup — demo-001",
+    "received_at": "2026-09-09T18:55:00Z",
+    "body": "Confirm signup with verification code 482913 or open https://auth.example.test/verify?token=synthetic-demo-token"
+  }
+}
