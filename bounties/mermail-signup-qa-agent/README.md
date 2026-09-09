@@ -13,6 +13,7 @@ The agent turns verification emails into reproducible QA evidence instead of tre
 5. Produces a deterministic JSON evidence report with latency, sender, subject, artifact type, and policy result.
 6. Redacts OTPs and verification links from both the subject and human-readable evidence.
 7. Escalates suspicious or ambiguous messages instead of clicking or replying.
+8. Restricts CLI fixture reads to the project `examples/` directory and rejects absolute/path-traversal input.
 
 ## Why this is useful
 
@@ -26,6 +27,7 @@ Email verification is often the missing piece in automated end-to-end testing. B
 - Sender and verification-link allowlists fail closed when empty; missing configuration never means allow-all.
 - Verification messages dated more than two minutes into the future are rejected as invalid evidence.
 - Never expose inbox credentials, API keys, cookies, OTPs, or magic links in logs or Git.
+- The CLI only reads `.json` fixtures resolved inside the project `examples/` directory; absolute paths and traversal attempts are rejected.
 - The skill does not purchase anything, transfer funds, trade tokens, or make financial decisions.
 - Ambiguous, security-sensitive, legal, financial, refund, and identity-recovery messages are escalated to a human.
 
@@ -50,7 +52,7 @@ The deterministic core uses only the Python standard library. A live agent uses 
 
 ## Deterministic verification status
 
-Verified on 2026-09-09 with 12/12 unit tests passing. Coverage includes:
+Verified on 2026-09-09 with **14/14 unit tests passing**. Coverage includes:
 
 - known-good OTP and magic-link flows;
 - sender-domain and verification-link allowlists;
@@ -59,9 +61,11 @@ Verified on 2026-09-09 with 12/12 unit tests passing. Coverage includes:
 - non-HTTPS link rejection;
 - sensitive account-recovery escalation;
 - missing-artifact escalation;
-- OTP/link redaction from evidence, including secrets placed in the email subject.
+- OTP/link redaction from evidence, including secrets placed in the email subject;
+- path-traversal rejection for CLI fixtures;
+- absolute-path rejection for CLI fixtures.
 
-The synthetic fixture returns `PASS` with `POLICY_OK` and emits only redacted evidence.
+The synthetic fixture returns `PASS` with `POLICY_OK` and emits only redacted evidence. The current pull request also passes the GitHub/Sonar security checks after the fixture-path hardening.
 
 ## Live demo flow
 
@@ -86,7 +90,8 @@ The project is intentionally easy to grade:
 - materially future-dated verification email -> `REJECT`
 - financial/account-recovery content -> `ESCALATE`
 - secrets are redacted in the subject and human-readable summary
+- path traversal / arbitrary filesystem reads -> rejected
 
 ## Bounty submission status
 
-Deterministic implementation and test gate complete. Remaining external gate: an authorized live Mermail MCP/OAuth inbox demo plus final Superteam submission metadata/eligibility checks. No credential or private authentication material belongs in this repository.
+Deterministic implementation, regression tests, synthetic demo, and security gate are complete. Remaining external gate: an authorized live Mermail MCP/OAuth inbox demo plus final Superteam submission metadata/eligibility checks. No credential or private authentication material belongs in this repository.
