@@ -1,6 +1,7 @@
 import importlib.util
 import pathlib
 import sys
+import tempfile
 import unittest
 from datetime import datetime, timezone
 
@@ -95,6 +96,24 @@ class SignupQaTests(unittest.TestCase):
         self.assertEqual(result["decision"], "PASS")
         self.assertNotIn("482913", result["subject"])
         self.assertIn("[REDACTED_CODE]", result["subject"])
+
+    def test_fixture_path_traversal_is_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = pathlib.Path(tmp) / "examples"
+            root.mkdir()
+            outside = pathlib.Path(tmp) / "secret.json"
+            outside.write_text("{}", encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "escapes"):
+                mod._resolve_fixture_path("../secret.json", root)
+
+    def test_absolute_fixture_path_is_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = pathlib.Path(tmp) / "examples"
+            root.mkdir()
+            candidate = root / "fixture.json"
+            candidate.write_text("{}", encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "relative"):
+                mod._resolve_fixture_path(str(candidate.resolve()), root)
 
 
 if __name__ == "__main__":
