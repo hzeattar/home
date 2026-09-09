@@ -15,13 +15,14 @@ python src/mermail_signup_qa.py examples/verification-email.json --now 2026-09-0
 
 Expected result:
 
-- 12/12 unit tests pass;
+- 14/14 unit tests pass;
 - the synthetic verification message receives `PASS`;
 - the report identifies an OTP artifact;
 - the result contains `POLICY_OK`;
 - the OTP and verification URL are redacted from output;
 - empty allowlists fail closed;
-- stale/future-dated evidence and unsafe links are rejected.
+- stale/future-dated evidence and unsafe links are rejected;
+- absolute fixture paths and path-traversal attempts are rejected.
 
 ## Part B — authorized live Mermail demo
 
@@ -79,7 +80,8 @@ The demo ends after evidence is produced. Do not click a magic link, enter an OT
 - the selected message with reusable secrets hidden;
 - deterministic verifier output;
 - PASS/ESCALATE/REJECT behavior;
-- 12/12 unit-test output;
+- 14/14 unit-test output;
+- GitHub/Sonar security checks passing after fixture-path hardening;
 - a final explanation of why email is untrusted data and cannot authorize actions.
 
 ## What NOT to show
@@ -91,4 +93,4 @@ The demo ends after evidence is produced. Do not click a magic link, enter an OT
 
 ## Suggested submission summary
 
-**Mermail Signup QA Agent** turns a Mermail inbox into an evidence-producing test primitive for AI coding agents. It closes the email-verification gap in automated signup QA using Mermail's least-privilege inbox workflow: baseline the mailbox, monitor only for new clean candidates, inspect exactly one message, validate sender/domain/freshness policy, redact secrets, and emit a deterministic report. Unsafe or ambiguous messages stop the run instead of being acted on automatically.
+**Mermail Signup QA Agent** turns a Mermail inbox into an evidence-producing test primitive for AI coding agents. It closes the email-verification gap in automated signup QA using Mermail's least-privilege inbox workflow: baseline the mailbox, monitor only for new clean candidates, inspect exactly one message, validate sender/domain/freshness policy, redact secrets, reject arbitrary fixture-path access, and emit a deterministic report. Unsafe or ambiguous messages stop the run instead of being acted on automatically.
