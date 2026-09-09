@@ -19,16 +19,29 @@ Before touching the inbox, establish:
 
 If authorization is unclear, stop and request human confirmation. Do not use this workflow to create or verify unrelated third-party accounts.
 
+## Least-privilege Mermail connection
+
+For verification QA, prefer Mermail's read-focused `agent-inbox` MCP profile rather than exposing send or payment-capable tools:
+
+`https://console.mermail.app/mcp?profile=agent-inbox`
+
+When using Codex, connect through Mermail OAuth instead of placing an API key in shell history or repository files. A successful connection should allow `list_mailboxes`, inbox search, and message inspection without unnecessary mutation privileges.
+
 ## Mermail workflow
 
-Use the connected Mermail tools/MCP. Tool names can vary by client; common Mermail operations include inbox search, thread retrieval, drafts, and send actions.
+Use the connected Mermail MCP tools. The primary operations for this skill are:
 
-For this skill, prefer read-only inbox actions:
+- `list_mailboxes` to identify the dedicated test inbox;
+- `search_emails` to find the message for the current `run_id`/sender/subject;
+- `get_email` or `get_thread` to inspect the selected message context.
 
-1. Search for a message matching the `run_id`, expected recipient, expected sender, or expected subject.
-2. If there are multiple plausible messages, fetch the relevant thread and choose the newest message that satisfies the test constraints.
-3. Do not send or reply unless the explicit QA scenario requires an outbound test message.
-4. Never place inbox credentials, API keys, cookies, OTP values, or magic-link URLs into Git commits, public issues, screenshots, or chat summaries.
+For this skill, keep the live path read-only:
+
+1. Find the dedicated QA mailbox.
+2. Search for a message matching the `run_id`, expected recipient, expected sender, or expected subject.
+3. If there are multiple plausible messages, load the relevant message/thread and choose the newest message that satisfies the test constraints.
+4. Do not send, reply, purchase, transfer, or invoke payment-capable tools as part of this verification workflow.
+5. Never place inbox credentials, API keys, cookies, OTP values, or magic-link URLs into Git commits, public issues, screenshots, or chat summaries.
 
 ## Verification policy
 
