@@ -69,6 +69,33 @@ class SignupQaTests(unittest.TestCase):
         self.assertEqual(result["decision"], "ESCALATE")
         self.assertIn("NO_VERIFICATION_ARTIFACT", result["reasons"])
 
+    def test_empty_sender_allowlist_fails_closed(self):
+        policy = mod.Policy((), ("example.test",), 900)
+        result = mod.analyze_message(msg("Verification code is 482913"), policy, NOW)
+        self.assertEqual(result["decision"], "ESCALATE")
+        self.assertIn("UNEXPECTED_SENDER_DOMAIN", result["reasons"])
+
+    def test_empty_link_allowlist_fails_closed(self):
+        policy = mod.Policy(("example.test",), (), 900)
+        result = mod.analyze_message(msg("Verify signup: https://auth.example.test/verify?t=x"), policy, NOW)
+        self.assertEqual(result["decision"], "ESCALATE")
+        self.assertIn("UNEXPECTED_LINK_DOMAIN", result["reasons"])
+
+    def test_future_timestamp_rejected(self):
+        result = mod.analyze_message(msg("Verification code is 482913", received="2026-09-09T19:10:00Z"), POLICY, NOW)
+        self.assertEqual(result["decision"], "REJECT")
+        self.assertIn("FUTURE_MESSAGE_TIMESTAMP", result["reasons"])
+
+    def test_subject_secret_is_redacted(self):
+        result = mod.analyze_message(
+            msg("Use the code shown in the subject.", subject="Verification code 482913"),
+            POLICY,
+            NOW,
+        )
+        self.assertEqual(result["decision"], "PASS")
+        self.assertNotIn("482913", result["subject"])
+        self.assertIn("[REDACTED_CODE]", result["subject"])
+
 
 if __name__ == "__main__":
     unittest.main()
