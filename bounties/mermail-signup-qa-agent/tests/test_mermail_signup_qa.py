@@ -1,12 +1,14 @@
 import importlib.util
 import pathlib
+import sys
 import unittest
 from datetime import datetime, timezone
 
 MODULE_PATH = pathlib.Path(__file__).parents[1] / "src" / "mermail_signup_qa.py"
 spec = importlib.util.spec_from_file_location("mermail_signup_qa", MODULE_PATH)
-mod = importlib.util.module_from_spec(spec)
 assert spec and spec.loader
+mod = importlib.util.module_from_spec(spec)
+sys.modules[spec.name] = mod
 spec.loader.exec_module(mod)
 
 NOW = datetime(2026, 9, 9, 19, 0, tzinfo=timezone.utc)
