@@ -9,9 +9,10 @@ The agent turns verification emails into reproducible QA evidence instead of tre
 1. Watches a Mermail inbox for a test run.
 2. Finds the matching verification, OTP, or magic-link email.
 3. Verifies sender and link domains against an explicit allowlist.
-4. Rejects stale codes and unsafe/non-HTTPS links.
+4. Rejects stale codes, implausibly future-dated messages, and unsafe/non-HTTPS links.
 5. Produces a deterministic JSON evidence report with latency, sender, subject, artifact type, and policy result.
-6. Escalates suspicious or ambiguous messages instead of clicking or replying.
+6. Redacts OTPs and verification links from both the subject and human-readable evidence.
+7. Escalates suspicious or ambiguous messages instead of clicking or replying.
 
 ## Why this is useful
 
@@ -22,6 +23,8 @@ Email verification is often the missing piece in automated end-to-end testing. B
 - Use only with accounts and environments you are authorized to test.
 - Never create or verify unrelated third-party accounts.
 - Never auto-click a link from an untrusted sender or unexpected domain.
+- Sender and verification-link allowlists fail closed when empty; missing configuration never means allow-all.
+- Verification messages dated more than two minutes into the future are rejected as invalid evidence.
 - Never expose inbox credentials, API keys, cookies, OTPs, or magic links in logs or Git.
 - The skill does not purchase anything, transfer funds, trade tokens, or make financial decisions.
 - Ambiguous, security-sensitive, legal, financial, refund, and identity-recovery messages are escalated to a human.
@@ -33,6 +36,7 @@ Email verification is often the missing piece in automated end-to-end testing. B
 - `tests/test_mermail_signup_qa.py` — fixture-based tests that require no paid API.
 - `examples/verification-email.json` — safe synthetic input.
 - `.env.example` — placeholder configuration only; no secrets.
+- `demo/DEMO_SCRIPT.md` — reproducible live-demo runbook.
 
 ## Local deterministic demo
 
@@ -43,6 +47,21 @@ python src/mermail_signup_qa.py examples/verification-email.json
 ```
 
 The deterministic core uses only the Python standard library. A live agent uses the Mermail MCP connection for inbox actions; credentials remain in the Mermail/OAuth environment and are never passed to this module.
+
+## Deterministic verification status
+
+Verified on 2026-09-09 with 12/12 unit tests passing. Coverage includes:
+
+- known-good OTP and magic-link flows;
+- sender-domain and verification-link allowlists;
+- fail-closed behavior for empty allowlists;
+- stale and future-dated evidence rejection;
+- non-HTTPS link rejection;
+- sensitive account-recovery escalation;
+- missing-artifact escalation;
+- OTP/link redaction from evidence, including secrets placed in the email subject.
+
+The synthetic fixture returns `PASS` with `POLICY_OK` and emits only redacted evidence.
 
 ## Live demo flow
 
@@ -59,12 +78,15 @@ The deterministic core uses only the Python standard library. A live agent uses 
 The project is intentionally easy to grade:
 
 - known-good OTP email -> `PASS`
+- known-good magic link -> `PASS`
 - sender-domain mismatch -> `ESCALATE`
+- empty sender/link allowlists -> fail closed
 - non-HTTPS verification link -> `REJECT`
 - stale verification email -> `REJECT`
+- materially future-dated verification email -> `REJECT`
 - financial/account-recovery content -> `ESCALATE`
-- secrets are redacted in the human-readable summary
+- secrets are redacted in the subject and human-readable summary
 
 ## Bounty submission status
 
-Work in progress for the Mermail agent-skill developer bounty. The live MCP demo and final submission metadata will be added only after the deterministic implementation and tests are complete.
+Deterministic implementation and test gate complete. Remaining external gate: an authorized live Mermail MCP/OAuth inbox demo plus final Superteam submission metadata/eligibility checks. No credential or private authentication material belongs in this repository.
