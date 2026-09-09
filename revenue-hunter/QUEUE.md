@@ -16,10 +16,13 @@ This queue contains only opportunities that were checked against the following g
 
 - **Sponsor/platform:** Mermail / Superteam Earn
 - **Reward:** 500 USDC prize pool
-- **Status:** `IMPLEMENTATION_ACTIVE`
+- **Status:** `TECHNICALLY_SUBMISSION_READY_EXTERNAL_GATES_REMAIN`
 - **Repo work:** PR #3 (`bounty/mermail-signup-qa-agent`)
-- **Current technical state:** deterministic QA implementation exists; fixture-read path traversal was hardened; latest SonarCloud / GitHub Advanced Security checks were green on the hardened head.
-- **Remaining external gates:** authorized Mermail inbox live demo; Superteam eligibility/account claim flow; final bounty submission.
+- **Current head:** `bcfbaf9946f4c416c1efc868ffbe9fdbdda90fae`
+- **Current technical state:** 14/14 deterministic policy/security tests are documented as passing; CLI fixture access is constrained to JSON files under the project `examples/` directory and rejects absolute/traversal paths; `SUBMISSION_PACK.md`, a sanitized live-demo result template, and an Antigravity/MCP OAuth example are now present in the PR package.
+- **Latest security gates:** GitHub Advanced Security reports success with no new alerts on the current head; SonarQube Cloud Quality Gate passes with 0 Security Hotspots.
+- **Remaining external gates:** authenticate an authorized Mermail workspace through OAuth; run one dedicated staging/test inbox demo and preserve only sanitized evidence; verify the Superteam listing's current agent-access mode and truthful user eligibility; add any required final media and submit through an already-authorized eligible account flow.
+- **Do not bypass:** age/guardian, KYC, CAPTCHA, identity, account, or platform eligibility requirements.
 - **Dedupe key:** `superteam:mermail-agent-skill`
 
 ## RH-002 — T3N Trusted Enterprise Agent
