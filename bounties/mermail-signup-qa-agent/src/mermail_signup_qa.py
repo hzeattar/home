@@ -23,6 +23,7 @@ SENSITIVE_TERMS = (
     "legal notice",
     "wire transfer",
 )
+MAX_FUTURE_SKEW_SECONDS = 120
 
 
 @dataclass(frozen=True)
@@ -40,8 +41,8 @@ def _domain_from_sender(sender: str) -> str:
 
 
 def _domain_allowed(domain: str, allowed: tuple[str, ...]) -> bool:
-    if not allowed:
-        return True
+    if not domain or not allowed:
+        return False
     domain = domain.lower().rstrip(".")
     for candidate in allowed:
         candidate = candidate.lower().rstrip(".")
@@ -74,7 +75,8 @@ def analyze_message(message: dict, policy: Policy, now: datetime | None = None) 
     subject = str(message.get("subject") or "")
     body = str(message.get("body") or "")
     received = _received_at(str(message.get("received_at") or ""))
-    age_seconds = max(0, int((now - received).total_seconds()))
+    signed_age_seconds = int((now - received).total_seconds())
+    age_seconds = max(0, signed_age_seconds)
     sender_domain = _domain_from_sender(sender)
     text = f"{subject}\n{body}"
     lower = text.lower()
@@ -90,7 +92,10 @@ def analyze_message(message: dict, policy: Policy, now: datetime | None = None) 
         decision = "ESCALATE"
         reasons.append("UNEXPECTED_SENDER_DOMAIN")
 
-    if age_seconds > policy.max_age_seconds:
+    if signed_age_seconds < -MAX_FUTURE_SKEW_SECONDS:
+        decision = "REJECT"
+        reasons.append("FUTURE_MESSAGE_TIMESTAMP")
+    elif age_seconds > policy.max_age_seconds:
         decision = "REJECT"
         reasons.append("STALE_MESSAGE")
 
@@ -146,7 +151,7 @@ def analyze_message(message: dict, policy: Policy, now: datetime | None = None) 
         "run_id": str(message.get("run_id") or ""),
         "checked_at": now.isoformat(),
         "sender_domain": sender_domain,
-        "subject": subject,
+        "subject": _redact(subject),
         "received_at": received.isoformat(),
         "age_seconds": age_seconds,
         "artifact_type": artifact_type,
