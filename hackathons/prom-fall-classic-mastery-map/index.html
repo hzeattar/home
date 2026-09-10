@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="MasteryMap AI — explainable adaptive learning powered by Bayesian Knowledge Tracing." />
+  <title>MasteryMap AI</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="MasteryMap AI home">
+        <span class="brand-mark">M</span>
+        <span>
+          <strong>MasteryMap</strong>
+          <small>AI learning coach</small>
+        </span>
+      </a>
+      <div class="top-actions">
+        <button id="resetBtn" class="ghost-btn" type="button">Reset session</button>
+        <span class="privacy-chip">Runs locally</span>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">ADAPTIVE • EXPLAINABLE • PRIVATE</p>
+          <h1>Study what your brain needs <em>next</em>.</h1>
+          <p class="lede">MasteryMap estimates what you know after every answer, then chooses the next practice item using Bayesian Knowledge Tracing — with the model reasoning visible to you.</p>
+          <div class="hero-actions">
+            <button id="startBtn" class="primary-btn" type="button">Start adaptive session</button>
+            <button id="demoBtn" class="secondary-btn" type="button">Run quick demo</button>
+          </div>
+        </div>
+
+        <div class="hero-card model-card">
+          <div class="card-heading">
+            <div>
+              <span class="mini-label">LIVE MODEL</span>
+              <h2>Learning state</h2>
+            </div>
+            <span id="modelStatus" class="status-dot">Ready</span>
+          </div>
+          <div id="heroMastery" class="hero-mastery"></div>
+          <div class="model-note">Each bar is the current probability that the learner has mastered a concept.</div>
+        </div>
+      </section>
+
+      <section id="workspace" class="workspace hidden" aria-live="polite">
+        <aside class="panel mastery-panel">
+          <div class="panel-title">
+            <div>
+              <span class="mini-label">MASTERY MAP</span>
+              <h2>Your concepts</h2>
+            </div>
+            <span id="overallMastery" class="metric-pill">0%</span>
+          </div>
+          <div id="conceptList" class="concept-list"></div>
+          <div class="session-metrics">
+            <div><span id="answeredMetric">0</span><small>answered</small></div>
+            <div><span id="accuracyMetric">—</span><small>accuracy</small></div>
+            <div><span id="gainMetric">+0%</span><small>mastery gain</small></div>
+          </div>
+        </aside>
+
+        <section class="panel question-panel">
+          <div class="question-meta">
+            <span id="conceptBadge" class="topic-badge">Concept</span>
+            <span id="difficultyBadge" class="difficulty-badge">Medium</span>
+          </div>
+          <p id="questionNumber" class="mini-label">QUESTION 1</p>
+          <h2 id="questionText">Choose Start to begin.</h2>
+          <div id="answers" class="answers"></div>
+          <div id="feedback" class="feedback hidden"></div>
+          <button id="nextBtn" class="primary-btn next-btn hidden" type="button">Next recommended question</button>
+        </section>
+
+        <aside class="panel why-panel">
+          <div class="panel-title">
+            <div>
+              <span class="mini-label">WHY THIS QUESTION?</span>
+              <h2>AI decision</h2>
+            </div>
+          </div>
+          <div class="prediction-ring" id="predictionRing">
+            <div><strong id="predictedSuccess">—</strong><span>predicted success</span></div>
+          </div>
+          <div id="reasoningList" class="reasoning-list">
+            <p class="empty-note">Start a session to see the model explain its recommendation.</p>
+          </div>
+        </aside>
+      </section>
+
+      <section class="how-it-works">
+        <div class="section-heading">
+          <span class="mini-label">UNDER THE HOOD</span>
+          <h2>Not a random quiz. A tiny learning model.</h2>
+        </div>
+        <div class="steps-grid">
+          <article><span>01</span><h3>Estimate</h3><p>Track mastery probability for each concept instead of only storing scores.</p></article>
+          <article><span>02</span><h3>Update</h3><p>Use Bayesian evidence from every correct or incorrect response, accounting for guesses and slips.</p></article>
+          <article><span>03</span><h3>Recommend</h3><p>Prioritize concepts with the best mix of learning need, uncertainty, spacing, and difficulty fit.</p></article>
+          <article><span>04</span><h3>Explain</h3><p>Show students the predicted success probability and the reasons behind every recommendation.</p></article>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>MasteryMap AI • Prom Fall Classic 2026</span>
+      <span>No login • No tracking • No external API</span>
+    </footer>
+  </div>
+
+  <script type="module" src="./src/app.js"></script>
+</body>
+</html>
