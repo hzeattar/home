@@ -1,0 +1,8 @@
+{
+  "name": "reloop-earth-forward",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ReLoop - a privacy-first circular electronics decision companion built for NextStep Hacks 2026.",
+  "scripts": {"start": "node server.js"},
+  "engines": {"node": ">=18"}
+}
