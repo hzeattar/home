@@ -22,8 +22,34 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Run policy and security tests
-        run: python -m unittest discover -s tests -v
-      - name: Run synthetic demo
-        run: python src/mermail_signup_qa.py examples/verification-email.json --now 2026-09-09T19:00:00Z
 
+      - name: Run policy and security tests
+        id: tests
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          python -m unittest discover -s tests -v 2>&1 | tee test-output.txt
+
+      - name: Run synthetic demo
+        id: demo
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          python src/mermail_signup_qa.py examples/verification-email.json --now 2026-09-09T19:00:00Z 2>&1 | tee demo-output.txt
+
+      - name: Preserve diagnostic output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mermail-ci-output
+          path: |
+            bounties/mermail-signup-qa-agent/test-output.txt
+            bounties/mermail-signup-qa-agent/demo-output.txt
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Enforce green gate
+        if: always()
+        run: |
+          test "${{ steps.tests.outcome }}" = "success"
+          test "${{ steps.demo.outcome }}" = "success"
