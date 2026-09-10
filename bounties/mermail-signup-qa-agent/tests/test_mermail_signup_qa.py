@@ -115,6 +115,22 @@ class SignupQaTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "relative"):
                 mod._resolve_fixture_path(str(candidate.resolve()), root)
 
+    def test_explicit_safe_disclaimer_does_not_escalate(self):
+        body = (
+            "Your verification code is 482913.\n"
+            "No payment, wallet, recovery, KYC, or identity action is requested."
+        )
+        result = mod.analyze_message(msg(body), POLICY, NOW)
+        self.assertEqual(result["decision"], "PASS")
+        self.assertEqual(result["reasons"], ["POLICY_OK"])
+
+    def test_run_id_digits_are_not_redacted_as_otp(self):
+        subject = "[Revenue Hunter QA] Signup verification test — RH-MERMAIL-20260910-001"
+        result = mod.analyze_message(msg("Your verification code is 482913", subject=subject), POLICY, NOW)
+        self.assertEqual(result["decision"], "PASS")
+        self.assertIn("RH-MERMAIL-20260910-001", result["subject"])
+        self.assertNotIn("482913", result["redacted_summary"])
+
 
 if __name__ == "__main__":
     unittest.main()
