@@ -16,12 +16,13 @@ This queue contains only opportunities that were checked against the following g
 
 - **Sponsor/platform:** Mermail / Superteam Earn
 - **Reward:** 500 USDC prize pool
-- **Status:** `TECHNICALLY_SUBMISSION_READY_EXTERNAL_GATES_REMAIN`
+- **Status:** `LIVE_MAILBOX_READY_TEST_SENT_MCP_READ_BLOCKED`
 - **Repo work:** PR #3 (`bounty/mermail-signup-qa-agent`)
 - **Current head:** `bcfbaf9946f4c416c1efc868ffbe9fdbdda90fae`
-- **Current technical state:** 14/14 deterministic policy/security tests are documented as passing; CLI fixture access is constrained to JSON files under the project `examples/` directory and rejects absolute/traversal paths; `SUBMISSION_PACK.md`, a sanitized live-demo result template, and an Antigravity/MCP OAuth example are now present in the PR package.
+- **Current technical state:** 14/14 deterministic policy/security tests are documented as passing; CLI fixture access is constrained to JSON files under the project `examples/` directory and rejects absolute/traversal paths; `SUBMISSION_PACK.md`, a sanitized live-demo result template, and an Antigravity/MCP OAuth example are present.
 - **Latest security gates:** GitHub Advanced Security reports success with no new alerts on the current head; SonarQube Cloud Quality Gate passes with 0 Security Hotspots.
-- **Remaining external gates:** authenticate an authorized Mermail workspace through OAuth; run one dedicated staging/test inbox demo and preserve only sanitized evidence; verify the Superteam listing's current agent-access mode and truthful user eligibility; add any required final media and submit through an already-authorized eligible account flow.
+- **Live execution progress (2026-09-10):** Mermail's onboarding email confirms the dedicated mailbox `hzeatar@mermail.app` is provisioned and ready. A synthetic authorized verification-style message with run id `RH-MERMAIL-20260910-001` was sent to that mailbox from the already-connected Gmail account. It contains no real credential, payment, wallet, recovery, KYC, or identity action.
+- **Remaining external gates:** connect the already-authorized Mermail workspace to an MCP-capable host; confirm `list_mailboxes`/message-read access and receipt of the synthetic run; preserve only sanitized evidence; verify truthful Superteam user/guardian eligibility; add any required final media and submit through an already-authorized eligible account flow.
 - **Do not bypass:** age/guardian, KYC, CAPTCHA, identity, account, or platform eligibility requirements.
 - **Dedupe key:** `superteam:mermail-agent-skill`
 
@@ -79,4 +80,6 @@ This queue contains only opportunities that were checked against the following g
 - **TaskBounty:** agent-friendly and paid on verified fixes, but advancement requires a platform API/account flow and payout eligibility not established in this workflow; watch only until eligibility is verified.
 - **Causify / PayPal bounties:** not advanced because PayPal payout eligibility may be incompatible with a minor operator without an eligible guardian-owned arrangement; no bypass attempted.
 - **Copperhead #66 ($50):** explicitly paid and clear scope, but the canonical bounty does not explicitly state AI-agent participation, and full reproduction depends on provider/KiCad environment; not advanced under the strict AI-allowed gate.
+- **AgentBounty.org:** rejected for now because its publicly indexed page presents bounties labelled active while showing due dates months in the past, so current-status/payout evidence is internally inconsistent and does not meet Revenue Hunter's verification standard.
+- **Bountix:** not advanced; current indexed claims are marketplace-style job aggregation and do not provide enough canonical per-task eligibility/payout evidence for this strict queue.
 - **Historical Superteam agent bounties:** multiple search results remain indexed but show `0h:0m:0s` and announced winners; they are closed and were not re-added.
