@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#071018" />
+  <title>MasteryMap AI</title>
+  <link rel="stylesheet" href="/src/mobile.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="top">
+      <div class="logo">M</div>
+      <div class="title-wrap">
+        <strong>MasteryMap AI</strong>
+        <span>Adaptive study coach</span>
+      </div>
+      <button id="restoreBtn" class="text-button" type="button">Restore</button>
+    </header>
+
+    <section class="hero">
+      <span class="eyebrow">NEXT GEN • PRIVATE • EXPLAINABLE</span>
+      <h1>Practice the concept that matters <em>next.</em></h1>
+      <p>Bayesian Knowledge Tracing updates your mastery after every answer and explains the next recommendation.</p>
+    </section>
+
+    <section class="card mastery-card">
+      <div class="section-head">
+        <div><span class="eyebrow">MASTERY</span><h2>Your learning map</h2></div>
+        <strong id="overallMastery" class="pill">35%</strong>
+      </div>
+      <div id="masteryList" class="mastery-list"></div>
+    </section>
+
+    <section class="card question-card">
+      <div class="question-top">
+        <span id="conceptBadge" class="pill accent">Algorithms</span>
+        <span id="prediction" class="prediction">68% predicted</span>
+      </div>
+      <p id="questionIndex" class="eyebrow">QUESTION 1</p>
+      <h2 id="questionText">Loading adaptive question…</h2>
+      <div id="answers" class="answers"></div>
+      <div id="feedback" class="feedback hidden"></div>
+      <button id="nextBtn" class="primary hidden" type="button">Next recommendation</button>
+    </section>
+
+    <section class="card why-card">
+      <span class="eyebrow">WHY THIS QUESTION?</span>
+      <h2>Model reasoning</h2>
+      <div id="reasons" class="reasons"></div>
+    </section>
+
+    <section class="card pro-card">
+      <div class="pro-heading">
+        <div>
+          <span class="eyebrow">PRO INSIGHTS</span>
+          <h2>Turn the model into a study plan</h2>
+        </div>
+        <span id="proState" class="pill">Locked</span>
+      </div>
+      <p class="muted">The Shipaton build uses RevenueCat to unlock deeper mastery insights and a personalized next-session plan.</p>
+      <div id="premiumInsights" class="premium hidden"></div>
+      <button id="unlockBtn" class="primary" type="button">Unlock Pro Insights</button>
+      <p id="purchaseStatus" class="purchase-status">Test Store integration is configured at build time.</p>
+    </section>
+
+    <section class="metrics">
+      <div><strong id="answeredMetric">0</strong><span>answered</span></div>
+      <div><strong id="accuracyMetric">—</strong><span>accuracy</span></div>
+      <div><strong id="gainMetric">+0%</strong><span>mastery gain</span></div>
+    </section>
+
+    <footer>MasteryMap AI • RevenueCat Shipaton 2026 Next Gen build</footer>
+  </main>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
