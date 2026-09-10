@@ -222,7 +222,7 @@ def main() -> int:
 
     now = datetime.fromisoformat(args.now.replace("Z", "+00:00")) if args.now else None
     result = analyze_message(payload["message"], policy_from_payload(payload), now)
-    print(json.dumps(result, indent=2, ensure_ascii=False))
+    print(json.dumps(result, indent=2))
     return 0 if result["decision"] == "PASS" else 2
 
 

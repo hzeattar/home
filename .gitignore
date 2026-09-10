@@ -10,6 +10,8 @@
 *.log
 .vercel
 .env*.local
+__pycache__/
+*.py[cod]
 
 # local tooling (machine-specific)
 .claude
