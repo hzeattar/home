@@ -1,22 +1,10 @@
 {
-  "name": "casita",
+  "name": "masterymap-ai",
   "version": "1.0.0",
   "private": true,
-  "description": "Design your dream home in 3D, right in your browser. No installs, no CAD degree.",
+  "type": "module",
   "scripts": {
-    "dev": "next dev",
-    "validate:assets": "node scripts/validate-furniture-assets.mjs",
-    "build": "npm run validate:assets && next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "@react-three/drei": "^10.7.0",
-    "@react-three/fiber": "^9.3.0",
-    "next": "^15.5.0",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "three": "^0.180.0",
-    "zustand": "^5.0.8"
+    "start": "node server.mjs",
+    "test": "node tests/model.test.mjs"
   }
 }
