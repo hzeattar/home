@@ -9,7 +9,10 @@ from email.utils import parseaddr, parsedate_to_datetime
 from pathlib import Path
 from urllib.parse import urlparse
 
-OTP_RE = re.compile(r"(?i)(?:code|otp|verification)[^0-9]{0,24}([0-9]{4,8})\b")
+OTP_RE = re.compile(
+    r"(?i)(?:\botp\b|\b(?:verification|security|login|one[- ]time)\s+code\b|\bcode\b)"
+    r"[^0-9]{0,16}([0-9]{4,8})\b"
+)
 URL_RE = re.compile(r"https?://[^\s<>()\[\]{}\"']+")
 SENSITIVE_TERMS = (
     "password reset",
@@ -22,6 +25,10 @@ SENSITIVE_TERMS = (
     "identity verification",
     "legal notice",
     "wire transfer",
+)
+SAFE_NEGATED_ACTION_RE = re.compile(
+    r"(?i)^\s*(?:no|neither)\b.{0,240}\b(?:action|actions|operation|operations)?\s*"
+    r"(?:is|are)\s+(?:being\s+)?requested\b[.!]?\s*$"
 )
 MAX_FUTURE_SKEW_SECONDS = 120
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -71,6 +78,24 @@ def _redact(text: str) -> str:
     return text
 
 
+def _has_sensitive_context(text: str) -> bool:
+    """Return True for actionable sensitive content, while allowing explicit safety disclaimers.
+
+    Inbox text is untrusted, so the exception is intentionally narrow: only a sentence that
+    starts with an explicit negation and ends by saying the action is not requested is ignored.
+    Other occurrences of sensitive terms still escalate.
+    """
+    segments = [segment.strip() for segment in re.split(r"(?<=[.!?])\s+|\n+", text) if segment.strip()]
+    for segment in segments:
+        lower = segment.lower()
+        if not any(term in lower for term in SENSITIVE_TERMS):
+            continue
+        if SAFE_NEGATED_ACTION_RE.fullmatch(segment):
+            continue
+        return True
+    return False
+
+
 def _resolve_fixture_path(value: str, fixture_root: Path | None = None) -> Path:
     """Resolve a CLI fixture only inside the approved examples directory.
 
@@ -83,8 +108,6 @@ def _resolve_fixture_path(value: str, fixture_root: Path | None = None) -> Path:
     if raw.is_absolute():
         raise ValueError("fixture path must be relative to the project examples directory")
 
-    # Keep the documented CLI spelling (examples/foo.json) while still resolving against
-    # a single fixed trust root. Bare filenames are also accepted for convenience.
     parts = raw.parts
     if parts and parts[0] == "examples":
         raw = Path(*parts[1:])
@@ -119,7 +142,7 @@ def analyze_message(message: dict, policy: Policy, now: datetime | None = None) 
     reasons: list[str] = []
     decision = "PASS"
 
-    if any(term in lower for term in SENSITIVE_TERMS):
+    if _has_sensitive_context(text):
         decision = "ESCALATE"
         reasons.append("SENSITIVE_CONTEXT")
 
