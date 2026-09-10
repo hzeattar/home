@@ -147,7 +147,7 @@ async function initRevenueCat() {
     await Purchases.setLogLevel({ level: LOG_LEVEL.DEBUG });
     await Purchases.configure({ apiKey: RC_API_KEY });
     revenueCatReady = true;
-    const customerInfo = await Purchases.getCustomerInfo();
+    const { customerInfo } = await Purchases.getCustomerInfo();
     setPro(isEntitled(customerInfo), 'RevenueCat Test Store connected. No real money is charged in test mode.');
   } catch (error) {
     els.purchaseStatus.textContent = `RevenueCat setup error: ${error?.message || 'unable to initialize'}`;
@@ -183,7 +183,7 @@ async function restorePro() {
   }
   els.restoreBtn.disabled = true;
   try {
-    const customerInfo = await Purchases.restorePurchases();
+    const { customerInfo } = await Purchases.restorePurchases();
     const active = isEntitled(customerInfo);
     setPro(active, active ? 'Purchase restored; Pro Insights is active.' : 'Restore completed; no active Pro Insights entitlement found.');
   } catch (error) {
