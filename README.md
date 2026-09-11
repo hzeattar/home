@@ -1,5 +1,7 @@
 # MasteryMap AI
 
+[![RustChain Ecosystem](https://img.shields.io/badge/RustChain-Ecosystem-orange)](https://github.com/Scottcjn/rustchain)
+
 **Adaptive learning that shows students what to study next — and why.**
 
 MasteryMap AI is a privacy-first educational web app built for the Prom Fall Classic 2026. It uses a lightweight Bayesian Knowledge Tracing model to estimate concept mastery after every answer, then recommends the next question using uncertainty, learning need, spacing, and difficulty fit.
