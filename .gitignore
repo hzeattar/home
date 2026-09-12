@@ -8,8 +8,11 @@
 # misc
 .DS_Store
 *.log
+logs_*.zip
 .vercel
 .env*.local
+__pycache__/
+*.py[cod]
 
 # local tooling (machine-specific)
 .claude

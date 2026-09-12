@@ -1,0 +1,54 @@
+name: Mermail Signup QA
+
+on:
+  pull_request:
+    paths:
+      - "bounties/mermail-signup-qa-agent/**"
+      - ".github/workflows/mermail-signup-qa.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  compile-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    defaults:
+      run:
+        working-directory: bounties/mermail-signup-qa-agent
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile source and tests
+        run: python -m py_compile src/mermail_signup_qa.py tests/test_mermail_signup_qa.py
+
+  unit-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    defaults:
+      run:
+        working-directory: bounties/mermail-signup-qa-agent
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run policy and security tests
+        run: python -m unittest discover -s tests -v
+
+  synthetic-demo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    defaults:
+      run:
+        working-directory: bounties/mermail-signup-qa-agent
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run synthetic demo
+        run: python src/mermail_signup_qa.py examples/verification-email.json --now 2026-09-09T19:00:00Z
