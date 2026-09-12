@@ -15,7 +15,7 @@ python src/mermail_signup_qa.py examples/verification-email.json --now 2026-09-0
 
 Expected result:
 
-- 14/14 unit tests pass;
+- 16/16 unit tests pass;
 - the synthetic verification message receives `PASS`;
 - the report identifies an OTP artifact;
 - the result contains `POLICY_OK`;
@@ -80,7 +80,7 @@ The demo ends after evidence is produced. Do not click a magic link, enter an OT
 - the selected message with reusable secrets hidden;
 - deterministic verifier output;
 - PASS/ESCALATE/REJECT behavior;
-- 14/14 unit-test output;
+- 16/16 unit-test output;
 - GitHub/Sonar security checks passing after fixture-path hardening;
 - a final explanation of why email is untrusted data and cannot authorize actions.
 

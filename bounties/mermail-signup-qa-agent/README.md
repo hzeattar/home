@@ -52,7 +52,7 @@ The deterministic core uses only the Python standard library. A live agent uses 
 
 ## Deterministic verification status
 
-Verified on 2026-09-09 with **14/14 unit tests passing**. Coverage includes:
+Verified locally on 2026-09-12 with **16/16 unit tests passing**. Coverage includes:
 
 - known-good OTP and magic-link flows;
 - sender-domain and verification-link allowlists;

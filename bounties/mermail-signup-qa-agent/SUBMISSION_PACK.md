@@ -17,7 +17,7 @@ A bounded AI-agent skill that closes the email-verification gap in automated sig
 - OTP and magic-link redaction from subject and evidence
 - fixture path isolation against absolute-path/traversal input
 - synthetic fixture and reproducible demo flow
-- 14 deterministic tests
+- 16 deterministic tests
 - security-gate evidence recorded on PR
 
 ## Public implementation
@@ -38,7 +38,7 @@ Expected deterministic result: all tests pass; synthetic fixture reports `PASS /
 Before submission, complete one authorized Mermail OAuth run using a dedicated staging/test inbox. Record only sanitized evidence in `demo/LIVE_DEMO_RESULT.md` using the provided template. Do not commit API keys, OAuth tokens, OTPs, magic links, cookies, mailbox credentials, or private message contents.
 
 ## Suggested `otherInfo`
-Built a Mermail-native Signup & Email Verification QA Agent that turns inbox verification artifacts into deterministic QA evidence. The workflow validates expected sender and link domains, fails closed on missing allowlists, rejects stale/future or non-HTTPS verification artifacts, escalates sensitive/ambiguous messages, redacts OTPs and magic links, and prevents arbitrary local fixture reads. The implementation includes a standard-library Python core, reproducible synthetic demo, and 14 deterministic tests. A sanitized live Mermail OAuth inbox run is attached/referenced separately. No credentials or reusable verification secrets are stored in the repository.
+Built a Mermail-native Signup & Email Verification QA Agent that turns inbox verification artifacts into deterministic QA evidence. The workflow validates expected sender and link domains, fails closed on missing allowlists, rejects stale/future or non-HTTPS verification artifacts, escalates sensitive/ambiguous messages, redacts OTPs and magic links, and prevents arbitrary local fixture reads. The implementation includes a standard-library Python core, reproducible synthetic demo, and 16 deterministic tests. A sanitized live Mermail OAuth inbox run is attached/referenced separately. No credentials or reusable verification secrets are stored in the repository.
 
 ## Final submission checklist
 - [ ] Listing revalidated through official Superteam agent feed
@@ -49,7 +49,7 @@ Built a Mermail-native Signup & Email Verification QA Agent that turns inbox ver
 - [ ] Dedicated test mailbox selected
 - [ ] Authorized staging/test message processed
 - [ ] Sanitized live-demo result committed
-- [ ] 14/14 deterministic tests still pass
+- [ ] 16/16 deterministic tests still pass
 - [ ] No secrets in Git history/diff
 - [ ] Required eligibility questions answered truthfully
 - [ ] Submission link points to accessible artifact/PR as required
